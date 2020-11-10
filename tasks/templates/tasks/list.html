@@ -23,7 +23,7 @@
         </form>
 
         <hr>
-        {% for task in tasks %}
+        {% for task in page_obj %}
         <div class="task-row">
             <div class="task-item">
                 {% if task.complete == True %}
@@ -37,6 +37,26 @@
 
         </div>
         {% endfor %}
+
+
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <a class="btn btn-dark" href="?page={{num}}">{{num}}</a>
+        {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
+        <a class="btn btn-outline-dark" href="?page={{num}}">{{num}}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_previous %}
+        <a class="btn btn-dark" href="?page=1">First</a>
+        {% endif %}
+        {% if page_obj.has_next %}
+        <a class="btn btn-dark" href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a class="btn btn-dark" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+        {% endif %}
+
+
     </div>
 
 </body>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse
+from django.core.paginator import Paginator
 from .models import *
 from .forms import *
 
@@ -7,14 +8,16 @@ from .forms import *
 # Create your views here.
 def index(request):
     tasks = Task.objects.all()
+    paginator = Paginator(tasks, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     form = TaskForm()
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
         return redirect('/')
-
-    context = {'tasks': tasks, 'form': form}
+    context = {'tasks': tasks, 'form': form, 'page_obj': page_obj}
     return render(request, 'tasks/list.html', context)
 
 
